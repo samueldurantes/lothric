@@ -1,5 +1,4 @@
-import { z } from 'zod';
-import { Agent } from '../agent';
+import { Agent, z } from '../';
 
 const agent = new Agent({
   port: 3000,
