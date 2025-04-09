@@ -12,8 +12,9 @@
     "baseUrl": "src",
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    "types": ["vitest/globals"]
   },
-  "include": ["src/**/*"],
+  "include": ["apps/**/*", "packages/**/*", "src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
