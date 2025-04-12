@@ -10,6 +10,7 @@ import {
   ensureTrailingSlash,
   verifyAuthRequest,
   verifySignedData,
+  decodeAuthToken,
 } from './utils';
 
 /**
@@ -54,12 +55,21 @@ type MethodOptions<
   O extends z.ZodSchema,
   E extends z.ZodSchema | undefined,
 > = {
+  /** The HTTP method to use for the method. @default 'post' */
+  method?: 'get' | 'post';
   auth?: {
     /** Whether the method requires authentication. @default false */
     required?: boolean;
   };
   /** Input validation schema */
-  input: I;
+  input:
+    | I
+    | {
+        /** Input validation schema */
+        schema: I;
+        /** Whether the input is a multipart form data */
+        multipartFormData: boolean;
+      };
   /** Output configuration for both successful and error responses */
   output: {
     /** Configuration for successful responses */
@@ -102,9 +112,17 @@ type MethodOptions<
  * };
  * ```
  */
-type MethodCallback<I extends z.ZodSchema, O extends z.ZodSchema, E extends z.ZodSchema> = (
+type MethodCallback<
+  I extends z.ZodSchema,
+  O extends z.ZodSchema,
+  E extends z.ZodSchema,
+> = (
   input: z.infer<I>,
-  _helpers: typeof helpers,
+  context: {
+    user?: {
+      walletAddress: string;
+    };
+  } & typeof helpers,
 ) => Promise<{ ok: z.infer<O> } | { err: z.infer<E> }>;
 
 /**
@@ -265,18 +283,34 @@ export class Agent {
     options: MethodOptions<I, O, E>,
     callback: MethodCallback<I, O, E>,
   ) {
+    const httpMethod = options?.method ?? 'post';
+
     const newMethodSchema = createRoute({
-      method: 'post',
+      method: httpMethod,
       path: ensureTrailingSlash(name),
       security: options.auth?.required ? [{ Bearer: [] }] : undefined,
       request: {
-        body: {
-          content: {
-            'application/json': {
-              schema: options.input,
-            },
-          },
-        },
+        ...(httpMethod === 'post'
+          ? {
+              body: {
+                content: {
+                  ...(typeof options.input === 'object' &&
+                  'multipartFormData' in options.input &&
+                  options.input.multipartFormData
+                    ? {
+                        'multipart/form-data': {
+                          schema: options.input.schema,
+                        },
+                      }
+                    : {
+                        'application/json': {
+                          schema: options.input,
+                        },
+                      }),
+                },
+              },
+            }
+          : {}),
       },
       responses: {
         200: {
@@ -313,15 +347,43 @@ export class Agent {
     });
 
     const handler: any = async (c: Context) => {
+      let decodedToken;
       if (options.auth?.required) {
-        const token = c.req.header(this.options.auth.headerName ?? 'Authorization')?.split(' ')[1];
+        const token = c.req
+          .header(this.options.auth.headerName ?? 'Authorization')
+          ?.split(' ')[1];
         if (!token) {
           return c.json({ message: 'Missing authentication token' }, 401);
         }
+        decodedToken = decodeAuthToken(token, this.options.auth.secret);
       }
 
-      const input = await c.req.json();
-      const result = await callback(input, helpers);
+      const isMultipartFormData =
+        'multipartFormData' in options.input && options.input.multipartFormData;
+
+      let input;
+      if (
+        httpMethod === 'post' &&
+        typeof options.input === 'object' &&
+        'multipartFormData' in options.input &&
+        options.input.multipartFormData
+      ) {
+        const formData = await c.req.formData();
+        input = Object.fromEntries(formData.entries());
+      }
+
+      if (httpMethod === 'post' && !isMultipartFormData) {
+        input = await c.req.json();
+      }
+
+      const context = {
+        ...(decodedToken
+          ? { user: { walletAddress: decodedToken.userKey } }
+          : {}),
+        ...helpers,
+      };
+
+      const result = await callback(input, context);
 
       if ('ok' in result) {
         return c.json(result.ok);

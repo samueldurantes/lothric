@@ -1,5 +1,9 @@
 import { hexToString } from '@polkadot/util';
-import { cryptoWaitReady, decodeAddress, signatureVerify } from '@polkadot/util-crypto';
+import {
+  cryptoWaitReady,
+  decodeAddress,
+  signatureVerify,
+} from '@polkadot/util-crypto';
 import * as jwt from 'jsonwebtoken';
 import { z } from 'zod';
 
@@ -29,20 +33,33 @@ export function isSS58(value: string | null | undefined): value is SS58Address {
   return true;
 }
 
-const SS58Schema = z.string().refine<SS58Address>(isSS58, 'Invalid SS58 address');
+const SS58Schema = z
+  .string()
+  .refine<SS58Address>(isSS58, 'Invalid SS58 address');
 
 const TokenDataSchema = z.object({
   userKey: SS58Schema,
   uri: z.string(),
 });
 
-export const createAuthToken = (tokenData: z.infer<typeof TokenDataSchema>, jwtSecret: string) => {
+export const createAuthToken = (
+  tokenData: z.infer<typeof TokenDataSchema>,
+  jwtSecret: string,
+) => {
   const token = jwt.sign(tokenData, jwtSecret, {
     algorithm: 'HS256',
     expiresIn: '24h',
   });
 
   return token;
+};
+
+export const decodeAuthToken = (token: string, jwtSecret: string) => {
+  const decoded = jwt.verify(token, jwtSecret, {
+    algorithms: ['HS256'],
+  });
+
+  return decoded as z.infer<typeof TokenDataSchema>;
 };
 
 export const AuthReqSchema = z.object({
@@ -82,7 +99,10 @@ export const verifySignedData = async (signedInput: SignedPayload) => {
 const seenNonces = new Map<string, number>();
 let lastNonceCleanup = Date.now();
 
-export const verifyAuthRequest = (data: z.infer<typeof AuthReqSchema>, authOrigin: string) => {
+export const verifyAuthRequest = (
+  data: z.infer<typeof AuthReqSchema>,
+  authOrigin: string,
+) => {
   if (data.uri !== authOrigin) {
     throw new Error(`Invalid origin: ${data.uri}`);
   }
