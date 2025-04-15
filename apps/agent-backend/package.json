@@ -3,13 +3,19 @@
   "version": "0.0.1",
   "private": true,
   "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "generate-docs": "tsx scripts/convertJsonToYaml.ts"
+  },
   "dependencies": {
     "@lothric/agent": "workspace:*",
     "mongoose": "^8.13.2"
   },
   "devDependencies": {
     "@types/dotenv-safe": "^8.1.6",
+    "@types/js-yaml": "^4.0.9",
     "@types/mongoose": "^5.11.97",
-    "dotenv-safe": "^9.1.0"
+    "dotenv-safe": "^9.1.0",
+    "js-yaml": "^4.1.0"
   }
 }

@@ -1,0 +1,345 @@
+openapi: 3.0.0
+info:
+  title: Gundyr API
+  version: 1.0.0
+components:
+  schemas: {}
+  parameters: {}
+paths:
+  /pin-file:
+    post:
+      security:
+        - Bearer: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  format: binary
+              required:
+                - file
+      responses:
+        '200':
+          description: Pin a file to IPFS
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      size:
+                        type: number
+                      cid:
+                        type: string
+                      user:
+                        nullable: true
+                      createdAt:
+                        type: string
+                      updatedAt:
+                        type: string
+                    required:
+                      - name
+                      - size
+                      - cid
+                required:
+                  - file
+        '400':
+          description: Return a message when error occurs on pin file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /request-quota-increase:
+    post:
+      security:
+        - Bearer: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                additionalFiles:
+                  type: integer
+                  minimum: 1
+                  exclusiveMinimum: true
+              required:
+                - additionalFiles
+      responses:
+        '200':
+          description: Request a quota increase
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  quoteId:
+                    type: string
+                  price:
+                    type: number
+                  paymentAddress:
+                    type: string
+                required:
+                  - quoteId
+                  - price
+                  - paymentAddress
+        '400':
+          description: Return a message when error occurs on request quota increase
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /check-session:
+    get:
+      security:
+        - Bearer: []
+      responses:
+        '200':
+          description: Return the user session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      walletAddress:
+                        type: string
+                      files:
+                        type: array
+                        items:
+                          type: string
+                      quotes:
+                        type: array
+                        items:
+                          type: string
+                      filesAvailable:
+                        type: number
+                    required:
+                      - id
+                      - walletAddress
+                      - files
+                      - quotes
+                      - filesAvailable
+                required:
+                  - user
+        '400':
+          description: Return a message when error occurs on check session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /confirm-payment:
+    post:
+      security:
+        - Bearer: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quoteId:
+                  type: string
+                blockHash:
+                  type: string
+              required:
+                - quoteId
+                - blockHash
+      responses:
+        '200':
+          description: Confirm a payment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        '400':
+          description: Return a message when error occurs on confirm payment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /get-files:
+    get:
+      security:
+        - Bearer: []
+      responses:
+        '200':
+          description: Get the files info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  files:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        size:
+                          type: number
+                        cid:
+                          type: string
+                        user:
+                          nullable: true
+                        createdAt:
+                          type: string
+                        updatedAt:
+                          type: string
+                      required:
+                        - name
+                        - size
+                        - cid
+                required:
+                  - files
+        '400':
+          description: Return a message when error occurs on get files
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
+  /auth:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+                  description: in hex
+                signature:
+                  type: string
+                  description: in hex
+                address:
+                  type: string
+                  description: in hex
+              required:
+                - payload
+                - signature
+                - address
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  authenticationType:
+                    type: string
+                    enum:
+                      - Bearer
+                required:
+                  - token
+                  - authenticationType
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                required:
+                  - message
