@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       postAuth({ data: { payload, signature, address } });
     },
-    [generateAuthReq, postAuth]
+    [generateAuthReq, postAuth],
   );
 
   const logout = useCallback(() => {
@@ -98,7 +98,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       authenticateUser,
       logout,
     }),
-    [user, token, isLoading, authenticateUser, logout]
+    [user, token, isLoading, authenticateUser, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

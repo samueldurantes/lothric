@@ -60,7 +60,7 @@ export const confirmPayment = async (agent: Agent) => {
         },
         {
           new: true,
-        }
+        },
       );
 
       if (!quoteUpdated) {
@@ -79,7 +79,7 @@ export const confirmPayment = async (agent: Agent) => {
           $inc: {
             filesAvailable: quoteUpdated.filesRequested,
           },
-        }
+        },
       );
 
       if (!userUpdated) {
@@ -95,6 +95,6 @@ export const confirmPayment = async (agent: Agent) => {
           message: 'Payment confirmed',
         },
       };
-    }
+    },
   );
 };

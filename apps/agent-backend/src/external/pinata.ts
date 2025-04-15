@@ -28,7 +28,7 @@ export const pinFileToIPFS = async (file: File) => {
         Authorization: `Bearer ${config.PINATA_JWT_SECRET}`,
       },
       body: formData,
-    }
+    },
   );
 
   const result = (await response.json()) as { IpfsHash: CID };

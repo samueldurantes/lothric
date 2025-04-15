@@ -4,10 +4,7 @@
  * Gundyr API
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -20,7 +17,7 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
+  UseQueryResult,
 } from '@tanstack/react-query';
 
 import type {
@@ -47,685 +44,924 @@ import type {
   PostRequestQuotaIncrease200,
   PostRequestQuotaIncrease400,
   PostRequestQuotaIncrease401,
-  PostRequestQuotaIncreaseBody
+  PostRequestQuotaIncreaseBody,
 } from '.././model';
 
 import { fetcher } from '../../lib/fetcher';
 
-
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-
-
 export type postPinFileResponse200 = {
-  data: PostPinFile200
-  status: 200
-}
+  data: PostPinFile200;
+  status: 200;
+};
 
 export type postPinFileResponse400 = {
-  data: PostPinFile400
-  status: 400
-}
+  data: PostPinFile400;
+  status: 400;
+};
 
 export type postPinFileResponse401 = {
-  data: PostPinFile401
-  status: 401
-}
-    
-export type postPinFileResponseComposite = postPinFileResponse200 | postPinFileResponse400 | postPinFileResponse401;
-    
+  data: PostPinFile401;
+  status: 401;
+};
+
+export type postPinFileResponseComposite =
+  | postPinFileResponse200
+  | postPinFileResponse400
+  | postPinFileResponse401;
+
 export type postPinFileResponse = postPinFileResponseComposite & {
   headers: Headers;
-}
+};
 
 export const getPostPinFileUrl = () => {
+  return `http://localhost:3000/pin-file`;
+};
 
+export const postPinFile = async (
+  postPinFileBody: PostPinFileBody,
+  options?: RequestInit,
+): Promise<postPinFileResponse> => {
+  const formData = new FormData();
+  formData.append('file', postPinFileBody.file);
 
-  
-
-  return `http://localhost:3000/pin-file`
-}
-
-export const postPinFile = async (postPinFileBody: PostPinFileBody, options?: RequestInit): Promise<postPinFileResponse> => {
-    const formData = new FormData();
-formData.append('file', postPinFileBody.file)
-
-  return fetcher<postPinFileResponse>(getPostPinFileUrl(),
-  {      
+  return fetcher<postPinFileResponse>(getPostPinFileUrl(), {
     ...options,
-    method: 'POST'
-    ,
-    body: 
-      formData,
-  }
-);}
+    method: 'POST',
+    body: formData,
+  });
+};
 
+export const getPostPinFileMutationOptions = <
+  TError = PostPinFile400 | PostPinFile401,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postPinFile>>,
+    TError,
+    { data: PostPinFileBody },
+    TContext
+  >;
+  request?: SecondParameter<typeof fetcher>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postPinFile>>,
+  TError,
+  { data: PostPinFileBody },
+  TContext
+> => {
+  const mutationKey = ['postPinFile'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postPinFile>>,
+    { data: PostPinFileBody }
+  > = (props) => {
+    const { data } = props ?? {};
 
+    return postPinFile(data, requestOptions);
+  };
 
-export const getPostPinFileMutationOptions = <TError = PostPinFile400 | PostPinFile401,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postPinFile>>, TError,{data: PostPinFileBody}, TContext>, request?: SecondParameter<typeof fetcher>}
-): UseMutationOptions<Awaited<ReturnType<typeof postPinFile>>, TError,{data: PostPinFileBody}, TContext> => {
-    
-const mutationKey = ['postPinFile'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+  return { mutationFn, ...mutationOptions };
+};
 
-      
+export type PostPinFileMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postPinFile>>
+>;
+export type PostPinFileMutationBody = PostPinFileBody;
+export type PostPinFileMutationError = PostPinFile400 | PostPinFile401;
 
+export const usePostPinFile = <
+  TError = PostPinFile400 | PostPinFile401,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postPinFile>>,
+      TError,
+      { data: PostPinFileBody },
+      TContext
+    >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof postPinFile>>,
+  TError,
+  { data: PostPinFileBody },
+  TContext
+> => {
+  const mutationOptions = getPostPinFileMutationOptions(options);
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postPinFile>>, {data: PostPinFileBody}> = (props) => {
-          const {data} = props ?? {};
-
-          return  postPinFile(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PostPinFileMutationResult = NonNullable<Awaited<ReturnType<typeof postPinFile>>>
-    export type PostPinFileMutationBody = PostPinFileBody
-    export type PostPinFileMutationError = PostPinFile400 | PostPinFile401
-
-    export const usePostPinFile = <TError = PostPinFile400 | PostPinFile401,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postPinFile>>, TError,{data: PostPinFileBody}, TContext>, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof postPinFile>>,
-        TError,
-        {data: PostPinFileBody},
-        TContext
-      > => {
-
-      const mutationOptions = getPostPinFileMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    export type getGetQuotaResponse200 = {
-  data: GetGetQuota200
-  status: 200
-}
+  return useMutation(mutationOptions, queryClient);
+};
+export type getGetQuotaResponse200 = {
+  data: GetGetQuota200;
+  status: 200;
+};
 
 export type getGetQuotaResponse400 = {
-  data: GetGetQuota400
-  status: 400
-}
+  data: GetGetQuota400;
+  status: 400;
+};
 
 export type getGetQuotaResponse401 = {
-  data: GetGetQuota401
-  status: 401
-}
-    
-export type getGetQuotaResponseComposite = getGetQuotaResponse200 | getGetQuotaResponse400 | getGetQuotaResponse401;
-    
+  data: GetGetQuota401;
+  status: 401;
+};
+
+export type getGetQuotaResponseComposite =
+  | getGetQuotaResponse200
+  | getGetQuotaResponse400
+  | getGetQuotaResponse401;
+
 export type getGetQuotaResponse = getGetQuotaResponseComposite & {
   headers: Headers;
-}
+};
 
 export const getGetGetQuotaUrl = () => {
+  return `http://localhost:3000/get-quota`;
+};
 
-
-  
-
-  return `http://localhost:3000/get-quota`
-}
-
-export const getGetQuota = async ( options?: RequestInit): Promise<getGetQuotaResponse> => {
-  
-  return fetcher<getGetQuotaResponse>(getGetGetQuotaUrl(),
-  {      
+export const getGetQuota = async (
+  options?: RequestInit,
+): Promise<getGetQuotaResponse> => {
+  return fetcher<getGetQuotaResponse>(getGetGetQuotaUrl(), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 export const getGetGetQuotaQueryKey = () => {
-    return [`http://localhost:3000/get-quota`] as const;
-    }
+  return [`http://localhost:3000/get-quota`] as const;
+};
 
-    
-export const getGetGetQuotaQueryOptions = <TData = Awaited<ReturnType<typeof getGetQuota>>, TError = GetGetQuota400 | GetGetQuota401>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGetQuota>>, TError, TData>>, request?: SecondParameter<typeof fetcher>}
-) => {
+export const getGetGetQuotaQueryOptions = <
+  TData = Awaited<ReturnType<typeof getGetQuota>>,
+  TError = GetGetQuota400 | GetGetQuota401,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getGetQuota>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof fetcher>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetGetQuotaQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getGetGetQuotaQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getGetQuota>>> = ({
+    signal,
+  }) => getGetQuota({ signal, ...requestOptions });
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getGetQuota>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getGetQuota>>> = ({ signal }) => getGetQuota({ signal, ...requestOptions });
+export type GetGetQuotaQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGetQuota>>
+>;
+export type GetGetQuotaQueryError = GetGetQuota400 | GetGetQuota401;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getGetQuota>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetGetQuotaQueryResult = NonNullable<Awaited<ReturnType<typeof getGetQuota>>>
-export type GetGetQuotaQueryError = GetGetQuota400 | GetGetQuota401
-
-
-export function useGetGetQuota<TData = Awaited<ReturnType<typeof getGetQuota>>, TError = GetGetQuota400 | GetGetQuota401>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGetQuota>>, TError, TData>> & Pick<
+export function useGetGetQuota<
+  TData = Awaited<ReturnType<typeof getGetQuota>>,
+  TError = GetGetQuota400 | GetGetQuota401,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getGetQuota>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getGetQuota>>,
           TError,
           Awaited<ReturnType<typeof getGetQuota>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetGetQuota<TData = Awaited<ReturnType<typeof getGetQuota>>, TError = GetGetQuota400 | GetGetQuota401>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGetQuota>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetGetQuota<
+  TData = Awaited<ReturnType<typeof getGetQuota>>,
+  TError = GetGetQuota400 | GetGetQuota401,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getGetQuota>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getGetQuota>>,
           TError,
           Awaited<ReturnType<typeof getGetQuota>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetGetQuota<TData = Awaited<ReturnType<typeof getGetQuota>>, TError = GetGetQuota400 | GetGetQuota401>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGetQuota>>, TError, TData>>, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetGetQuota<
+  TData = Awaited<ReturnType<typeof getGetQuota>>,
+  TError = GetGetQuota400 | GetGetQuota401,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getGetQuota>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useGetGetQuota<TData = Awaited<ReturnType<typeof getGetQuota>>, TError = GetGetQuota400 | GetGetQuota401>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGetQuota>>, TError, TData>>, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetGetQuota<
+  TData = Awaited<ReturnType<typeof getGetQuota>>,
+  TError = GetGetQuota400 | GetGetQuota401,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getGetQuota>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetGetQuotaQueryOptions(options);
 
-  const queryOptions = getGetGetQuotaQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
 
 export type postRequestQuotaIncreaseResponse200 = {
-  data: PostRequestQuotaIncrease200
-  status: 200
-}
+  data: PostRequestQuotaIncrease200;
+  status: 200;
+};
 
 export type postRequestQuotaIncreaseResponse400 = {
-  data: PostRequestQuotaIncrease400
-  status: 400
-}
+  data: PostRequestQuotaIncrease400;
+  status: 400;
+};
 
 export type postRequestQuotaIncreaseResponse401 = {
-  data: PostRequestQuotaIncrease401
-  status: 401
-}
-    
-export type postRequestQuotaIncreaseResponseComposite = postRequestQuotaIncreaseResponse200 | postRequestQuotaIncreaseResponse400 | postRequestQuotaIncreaseResponse401;
-    
-export type postRequestQuotaIncreaseResponse = postRequestQuotaIncreaseResponseComposite & {
-  headers: Headers;
-}
+  data: PostRequestQuotaIncrease401;
+  status: 401;
+};
+
+export type postRequestQuotaIncreaseResponseComposite =
+  | postRequestQuotaIncreaseResponse200
+  | postRequestQuotaIncreaseResponse400
+  | postRequestQuotaIncreaseResponse401;
+
+export type postRequestQuotaIncreaseResponse =
+  postRequestQuotaIncreaseResponseComposite & {
+    headers: Headers;
+  };
 
 export const getPostRequestQuotaIncreaseUrl = () => {
+  return `http://localhost:3000/request-quota-increase`;
+};
 
+export const postRequestQuotaIncrease = async (
+  postRequestQuotaIncreaseBody: PostRequestQuotaIncreaseBody,
+  options?: RequestInit,
+): Promise<postRequestQuotaIncreaseResponse> => {
+  return fetcher<postRequestQuotaIncreaseResponse>(
+    getPostRequestQuotaIncreaseUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(postRequestQuotaIncreaseBody),
+    },
+  );
+};
 
-  
+export const getPostRequestQuotaIncreaseMutationOptions = <
+  TError = PostRequestQuotaIncrease400 | PostRequestQuotaIncrease401,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postRequestQuotaIncrease>>,
+    TError,
+    { data: PostRequestQuotaIncreaseBody },
+    TContext
+  >;
+  request?: SecondParameter<typeof fetcher>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postRequestQuotaIncrease>>,
+  TError,
+  { data: PostRequestQuotaIncreaseBody },
+  TContext
+> => {
+  const mutationKey = ['postRequestQuotaIncrease'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
-  return `http://localhost:3000/request-quota-increase`
-}
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postRequestQuotaIncrease>>,
+    { data: PostRequestQuotaIncreaseBody }
+  > = (props) => {
+    const { data } = props ?? {};
 
-export const postRequestQuotaIncrease = async (postRequestQuotaIncreaseBody: PostRequestQuotaIncreaseBody, options?: RequestInit): Promise<postRequestQuotaIncreaseResponse> => {
-  
-  return fetcher<postRequestQuotaIncreaseResponse>(getPostRequestQuotaIncreaseUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      postRequestQuotaIncreaseBody,)
-  }
-);}
+    return postRequestQuotaIncrease(data, requestOptions);
+  };
 
+  return { mutationFn, ...mutationOptions };
+};
 
+export type PostRequestQuotaIncreaseMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postRequestQuotaIncrease>>
+>;
+export type PostRequestQuotaIncreaseMutationBody = PostRequestQuotaIncreaseBody;
+export type PostRequestQuotaIncreaseMutationError =
+  | PostRequestQuotaIncrease400
+  | PostRequestQuotaIncrease401;
 
+export const usePostRequestQuotaIncrease = <
+  TError = PostRequestQuotaIncrease400 | PostRequestQuotaIncrease401,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postRequestQuotaIncrease>>,
+      TError,
+      { data: PostRequestQuotaIncreaseBody },
+      TContext
+    >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof postRequestQuotaIncrease>>,
+  TError,
+  { data: PostRequestQuotaIncreaseBody },
+  TContext
+> => {
+  const mutationOptions = getPostRequestQuotaIncreaseMutationOptions(options);
 
-export const getPostRequestQuotaIncreaseMutationOptions = <TError = PostRequestQuotaIncrease400 | PostRequestQuotaIncrease401,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRequestQuotaIncrease>>, TError,{data: PostRequestQuotaIncreaseBody}, TContext>, request?: SecondParameter<typeof fetcher>}
-): UseMutationOptions<Awaited<ReturnType<typeof postRequestQuotaIncrease>>, TError,{data: PostRequestQuotaIncreaseBody}, TContext> => {
-    
-const mutationKey = ['postRequestQuotaIncrease'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postRequestQuotaIncrease>>, {data: PostRequestQuotaIncreaseBody}> = (props) => {
-          const {data} = props ?? {};
-
-          return  postRequestQuotaIncrease(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PostRequestQuotaIncreaseMutationResult = NonNullable<Awaited<ReturnType<typeof postRequestQuotaIncrease>>>
-    export type PostRequestQuotaIncreaseMutationBody = PostRequestQuotaIncreaseBody
-    export type PostRequestQuotaIncreaseMutationError = PostRequestQuotaIncrease400 | PostRequestQuotaIncrease401
-
-    export const usePostRequestQuotaIncrease = <TError = PostRequestQuotaIncrease400 | PostRequestQuotaIncrease401,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postRequestQuotaIncrease>>, TError,{data: PostRequestQuotaIncreaseBody}, TContext>, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof postRequestQuotaIncrease>>,
-        TError,
-        {data: PostRequestQuotaIncreaseBody},
-        TContext
-      > => {
-
-      const mutationOptions = getPostRequestQuotaIncreaseMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    export type getCheckSessionResponse200 = {
-  data: GetCheckSession200
-  status: 200
-}
+  return useMutation(mutationOptions, queryClient);
+};
+export type getCheckSessionResponse200 = {
+  data: GetCheckSession200;
+  status: 200;
+};
 
 export type getCheckSessionResponse400 = {
-  data: GetCheckSession400
-  status: 400
-}
+  data: GetCheckSession400;
+  status: 400;
+};
 
 export type getCheckSessionResponse401 = {
-  data: GetCheckSession401
-  status: 401
-}
-    
-export type getCheckSessionResponseComposite = getCheckSessionResponse200 | getCheckSessionResponse400 | getCheckSessionResponse401;
-    
+  data: GetCheckSession401;
+  status: 401;
+};
+
+export type getCheckSessionResponseComposite =
+  | getCheckSessionResponse200
+  | getCheckSessionResponse400
+  | getCheckSessionResponse401;
+
 export type getCheckSessionResponse = getCheckSessionResponseComposite & {
   headers: Headers;
-}
+};
 
 export const getGetCheckSessionUrl = () => {
+  return `http://localhost:3000/check-session`;
+};
 
-
-  
-
-  return `http://localhost:3000/check-session`
-}
-
-export const getCheckSession = async ( options?: RequestInit): Promise<getCheckSessionResponse> => {
-  
-  return fetcher<getCheckSessionResponse>(getGetCheckSessionUrl(),
-  {      
+export const getCheckSession = async (
+  options?: RequestInit,
+): Promise<getCheckSessionResponse> => {
+  return fetcher<getCheckSessionResponse>(getGetCheckSessionUrl(), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 export const getGetCheckSessionQueryKey = () => {
-    return [`http://localhost:3000/check-session`] as const;
-    }
+  return [`http://localhost:3000/check-session`] as const;
+};
 
-    
-export const getGetCheckSessionQueryOptions = <TData = Awaited<ReturnType<typeof getCheckSession>>, TError = GetCheckSession400 | GetCheckSession401>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCheckSession>>, TError, TData>>, request?: SecondParameter<typeof fetcher>}
-) => {
+export const getGetCheckSessionQueryOptions = <
+  TData = Awaited<ReturnType<typeof getCheckSession>>,
+  TError = GetCheckSession400 | GetCheckSession401,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getCheckSession>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof fetcher>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetCheckSessionQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getGetCheckSessionQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getCheckSession>>> = ({
+    signal,
+  }) => getCheckSession({ signal, ...requestOptions });
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getCheckSession>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCheckSession>>> = ({ signal }) => getCheckSession({ signal, ...requestOptions });
+export type GetCheckSessionQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getCheckSession>>
+>;
+export type GetCheckSessionQueryError = GetCheckSession400 | GetCheckSession401;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCheckSession>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetCheckSessionQueryResult = NonNullable<Awaited<ReturnType<typeof getCheckSession>>>
-export type GetCheckSessionQueryError = GetCheckSession400 | GetCheckSession401
-
-
-export function useGetCheckSession<TData = Awaited<ReturnType<typeof getCheckSession>>, TError = GetCheckSession400 | GetCheckSession401>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCheckSession>>, TError, TData>> & Pick<
+export function useGetCheckSession<
+  TData = Awaited<ReturnType<typeof getCheckSession>>,
+  TError = GetCheckSession400 | GetCheckSession401,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCheckSession>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getCheckSession>>,
           TError,
           Awaited<ReturnType<typeof getCheckSession>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetCheckSession<TData = Awaited<ReturnType<typeof getCheckSession>>, TError = GetCheckSession400 | GetCheckSession401>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCheckSession>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetCheckSession<
+  TData = Awaited<ReturnType<typeof getCheckSession>>,
+  TError = GetCheckSession400 | GetCheckSession401,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCheckSession>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getCheckSession>>,
           TError,
           Awaited<ReturnType<typeof getCheckSession>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetCheckSession<TData = Awaited<ReturnType<typeof getCheckSession>>, TError = GetCheckSession400 | GetCheckSession401>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCheckSession>>, TError, TData>>, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetCheckSession<
+  TData = Awaited<ReturnType<typeof getCheckSession>>,
+  TError = GetCheckSession400 | GetCheckSession401,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCheckSession>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useGetCheckSession<TData = Awaited<ReturnType<typeof getCheckSession>>, TError = GetCheckSession400 | GetCheckSession401>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCheckSession>>, TError, TData>>, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetCheckSession<
+  TData = Awaited<ReturnType<typeof getCheckSession>>,
+  TError = GetCheckSession400 | GetCheckSession401,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof getCheckSession>>,
+        TError,
+        TData
+      >
+    >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetCheckSessionQueryOptions(options);
 
-  const queryOptions = getGetCheckSessionQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
 
 export type postConfirmPaymentResponse200 = {
-  data: PostConfirmPayment200
-  status: 200
-}
+  data: PostConfirmPayment200;
+  status: 200;
+};
 
 export type postConfirmPaymentResponse400 = {
-  data: PostConfirmPayment400
-  status: 400
-}
+  data: PostConfirmPayment400;
+  status: 400;
+};
 
 export type postConfirmPaymentResponse401 = {
-  data: PostConfirmPayment401
-  status: 401
-}
-    
-export type postConfirmPaymentResponseComposite = postConfirmPaymentResponse200 | postConfirmPaymentResponse400 | postConfirmPaymentResponse401;
-    
+  data: PostConfirmPayment401;
+  status: 401;
+};
+
+export type postConfirmPaymentResponseComposite =
+  | postConfirmPaymentResponse200
+  | postConfirmPaymentResponse400
+  | postConfirmPaymentResponse401;
+
 export type postConfirmPaymentResponse = postConfirmPaymentResponseComposite & {
   headers: Headers;
-}
+};
 
 export const getPostConfirmPaymentUrl = () => {
+  return `http://localhost:3000/confirm-payment`;
+};
 
-
-  
-
-  return `http://localhost:3000/confirm-payment`
-}
-
-export const postConfirmPayment = async (postConfirmPaymentBody: PostConfirmPaymentBody, options?: RequestInit): Promise<postConfirmPaymentResponse> => {
-  
-  return fetcher<postConfirmPaymentResponse>(getPostConfirmPaymentUrl(),
-  {      
+export const postConfirmPayment = async (
+  postConfirmPaymentBody: PostConfirmPaymentBody,
+  options?: RequestInit,
+): Promise<postConfirmPaymentResponse> => {
+  return fetcher<postConfirmPaymentResponse>(getPostConfirmPaymentUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      postConfirmPaymentBody,)
-  }
-);}
+    body: JSON.stringify(postConfirmPaymentBody),
+  });
+};
 
+export const getPostConfirmPaymentMutationOptions = <
+  TError = PostConfirmPayment400 | PostConfirmPayment401,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postConfirmPayment>>,
+    TError,
+    { data: PostConfirmPaymentBody },
+    TContext
+  >;
+  request?: SecondParameter<typeof fetcher>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postConfirmPayment>>,
+  TError,
+  { data: PostConfirmPaymentBody },
+  TContext
+> => {
+  const mutationKey = ['postConfirmPayment'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postConfirmPayment>>,
+    { data: PostConfirmPaymentBody }
+  > = (props) => {
+    const { data } = props ?? {};
 
+    return postConfirmPayment(data, requestOptions);
+  };
 
-export const getPostConfirmPaymentMutationOptions = <TError = PostConfirmPayment400 | PostConfirmPayment401,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postConfirmPayment>>, TError,{data: PostConfirmPaymentBody}, TContext>, request?: SecondParameter<typeof fetcher>}
-): UseMutationOptions<Awaited<ReturnType<typeof postConfirmPayment>>, TError,{data: PostConfirmPaymentBody}, TContext> => {
-    
-const mutationKey = ['postConfirmPayment'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+  return { mutationFn, ...mutationOptions };
+};
 
-      
+export type PostConfirmPaymentMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postConfirmPayment>>
+>;
+export type PostConfirmPaymentMutationBody = PostConfirmPaymentBody;
+export type PostConfirmPaymentMutationError =
+  | PostConfirmPayment400
+  | PostConfirmPayment401;
 
+export const usePostConfirmPayment = <
+  TError = PostConfirmPayment400 | PostConfirmPayment401,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postConfirmPayment>>,
+      TError,
+      { data: PostConfirmPaymentBody },
+      TContext
+    >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof postConfirmPayment>>,
+  TError,
+  { data: PostConfirmPaymentBody },
+  TContext
+> => {
+  const mutationOptions = getPostConfirmPaymentMutationOptions(options);
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postConfirmPayment>>, {data: PostConfirmPaymentBody}> = (props) => {
-          const {data} = props ?? {};
-
-          return  postConfirmPayment(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PostConfirmPaymentMutationResult = NonNullable<Awaited<ReturnType<typeof postConfirmPayment>>>
-    export type PostConfirmPaymentMutationBody = PostConfirmPaymentBody
-    export type PostConfirmPaymentMutationError = PostConfirmPayment400 | PostConfirmPayment401
-
-    export const usePostConfirmPayment = <TError = PostConfirmPayment400 | PostConfirmPayment401,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postConfirmPayment>>, TError,{data: PostConfirmPaymentBody}, TContext>, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof postConfirmPayment>>,
-        TError,
-        {data: PostConfirmPaymentBody},
-        TContext
-      > => {
-
-      const mutationOptions = getPostConfirmPaymentMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    export type getGetFilesResponse200 = {
-  data: GetGetFiles200
-  status: 200
-}
+  return useMutation(mutationOptions, queryClient);
+};
+export type getGetFilesResponse200 = {
+  data: GetGetFiles200;
+  status: 200;
+};
 
 export type getGetFilesResponse400 = {
-  data: GetGetFiles400
-  status: 400
-}
+  data: GetGetFiles400;
+  status: 400;
+};
 
 export type getGetFilesResponse401 = {
-  data: GetGetFiles401
-  status: 401
-}
-    
-export type getGetFilesResponseComposite = getGetFilesResponse200 | getGetFilesResponse400 | getGetFilesResponse401;
-    
+  data: GetGetFiles401;
+  status: 401;
+};
+
+export type getGetFilesResponseComposite =
+  | getGetFilesResponse200
+  | getGetFilesResponse400
+  | getGetFilesResponse401;
+
 export type getGetFilesResponse = getGetFilesResponseComposite & {
   headers: Headers;
-}
+};
 
 export const getGetGetFilesUrl = () => {
+  return `http://localhost:3000/get-files`;
+};
 
-
-  
-
-  return `http://localhost:3000/get-files`
-}
-
-export const getGetFiles = async ( options?: RequestInit): Promise<getGetFilesResponse> => {
-  
-  return fetcher<getGetFilesResponse>(getGetGetFilesUrl(),
-  {      
+export const getGetFiles = async (
+  options?: RequestInit,
+): Promise<getGetFilesResponse> => {
+  return fetcher<getGetFilesResponse>(getGetGetFilesUrl(), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 export const getGetGetFilesQueryKey = () => {
-    return [`http://localhost:3000/get-files`] as const;
-    }
+  return [`http://localhost:3000/get-files`] as const;
+};
 
-    
-export const getGetGetFilesQueryOptions = <TData = Awaited<ReturnType<typeof getGetFiles>>, TError = GetGetFiles400 | GetGetFiles401>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGetFiles>>, TError, TData>>, request?: SecondParameter<typeof fetcher>}
-) => {
+export const getGetGetFilesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getGetFiles>>,
+  TError = GetGetFiles400 | GetGetFiles401,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getGetFiles>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof fetcher>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-const {query: queryOptions, request: requestOptions} = options ?? {};
+  const queryKey = queryOptions?.queryKey ?? getGetGetFilesQueryKey();
 
-  const queryKey =  queryOptions?.queryKey ?? getGetGetFilesQueryKey();
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getGetFiles>>> = ({
+    signal,
+  }) => getGetFiles({ signal, ...requestOptions });
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getGetFiles>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getGetFiles>>> = ({ signal }) => getGetFiles({ signal, ...requestOptions });
+export type GetGetFilesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getGetFiles>>
+>;
+export type GetGetFilesQueryError = GetGetFiles400 | GetGetFiles401;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getGetFiles>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetGetFilesQueryResult = NonNullable<Awaited<ReturnType<typeof getGetFiles>>>
-export type GetGetFilesQueryError = GetGetFiles400 | GetGetFiles401
-
-
-export function useGetGetFiles<TData = Awaited<ReturnType<typeof getGetFiles>>, TError = GetGetFiles400 | GetGetFiles401>(
-  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGetFiles>>, TError, TData>> & Pick<
+export function useGetGetFiles<
+  TData = Awaited<ReturnType<typeof getGetFiles>>,
+  TError = GetGetFiles400 | GetGetFiles401,
+>(
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getGetFiles>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getGetFiles>>,
           TError,
           Awaited<ReturnType<typeof getGetFiles>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetGetFiles<TData = Awaited<ReturnType<typeof getGetFiles>>, TError = GetGetFiles400 | GetGetFiles401>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGetFiles>>, TError, TData>> & Pick<
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetGetFiles<
+  TData = Awaited<ReturnType<typeof getGetFiles>>,
+  TError = GetGetFiles400 | GetGetFiles401,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getGetFiles>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getGetFiles>>,
           TError,
           Awaited<ReturnType<typeof getGetFiles>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetGetFiles<TData = Awaited<ReturnType<typeof getGetFiles>>, TError = GetGetFiles400 | GetGetFiles401>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGetFiles>>, TError, TData>>, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetGetFiles<
+  TData = Awaited<ReturnType<typeof getGetFiles>>,
+  TError = GetGetFiles400 | GetGetFiles401,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getGetFiles>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useGetGetFiles<TData = Awaited<ReturnType<typeof getGetFiles>>, TError = GetGetFiles400 | GetGetFiles401>(
-  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getGetFiles>>, TError, TData>>, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetGetFiles<
+  TData = Awaited<ReturnType<typeof getGetFiles>>,
+  TError = GetGetFiles400 | GetGetFiles401,
+>(
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getGetFiles>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetGetFilesQueryOptions(options);
 
-  const queryOptions = getGetGetFilesQueryOptions(options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
 
-
-
 export type postAuthResponse200 = {
-  data: PostAuth200
-  status: 200
-}
+  data: PostAuth200;
+  status: 200;
+};
 
 export type postAuthResponse400 = {
-  data: PostAuth400
-  status: 400
-}
-    
-export type postAuthResponseComposite = postAuthResponse200 | postAuthResponse400;
-    
+  data: PostAuth400;
+  status: 400;
+};
+
+export type postAuthResponseComposite =
+  | postAuthResponse200
+  | postAuthResponse400;
+
 export type postAuthResponse = postAuthResponseComposite & {
   headers: Headers;
-}
+};
 
 export const getPostAuthUrl = () => {
+  return `http://localhost:3000/auth`;
+};
 
-
-  
-
-  return `http://localhost:3000/auth`
-}
-
-export const postAuth = async (postAuthBody: PostAuthBody, options?: RequestInit): Promise<postAuthResponse> => {
-  
-  return fetcher<postAuthResponse>(getPostAuthUrl(),
-  {      
+export const postAuth = async (
+  postAuthBody: PostAuthBody,
+  options?: RequestInit,
+): Promise<postAuthResponse> => {
+  return fetcher<postAuthResponse>(getPostAuthUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      postAuthBody,)
-  }
-);}
+    body: JSON.stringify(postAuthBody),
+  });
+};
 
+export const getPostAuthMutationOptions = <
+  TError = PostAuth400,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof postAuth>>,
+    TError,
+    { data: PostAuthBody },
+    TContext
+  >;
+  request?: SecondParameter<typeof fetcher>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof postAuth>>,
+  TError,
+  { data: PostAuthBody },
+  TContext
+> => {
+  const mutationKey = ['postAuth'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
 
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof postAuth>>,
+    { data: PostAuthBody }
+  > = (props) => {
+    const { data } = props ?? {};
 
+    return postAuth(data, requestOptions);
+  };
 
-export const getPostAuthMutationOptions = <TError = PostAuth400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuth>>, TError,{data: PostAuthBody}, TContext>, request?: SecondParameter<typeof fetcher>}
-): UseMutationOptions<Awaited<ReturnType<typeof postAuth>>, TError,{data: PostAuthBody}, TContext> => {
-    
-const mutationKey = ['postAuth'];
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
+  return { mutationFn, ...mutationOptions };
+};
 
-      
+export type PostAuthMutationResult = NonNullable<
+  Awaited<ReturnType<typeof postAuth>>
+>;
+export type PostAuthMutationBody = PostAuthBody;
+export type PostAuthMutationError = PostAuth400;
 
+export const usePostAuth = <TError = PostAuth400, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof postAuth>>,
+      TError,
+      { data: PostAuthBody },
+      TContext
+    >;
+    request?: SecondParameter<typeof fetcher>;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof postAuth>>,
+  TError,
+  { data: PostAuthBody },
+  TContext
+> => {
+  const mutationOptions = getPostAuthMutationOptions(options);
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postAuth>>, {data: PostAuthBody}> = (props) => {
-          const {data} = props ?? {};
-
-          return  postAuth(data,requestOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type PostAuthMutationResult = NonNullable<Awaited<ReturnType<typeof postAuth>>>
-    export type PostAuthMutationBody = PostAuthBody
-    export type PostAuthMutationError = PostAuth400
-
-    export const usePostAuth = <TError = PostAuth400,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAuth>>, TError,{data: PostAuthBody}, TContext>, request?: SecondParameter<typeof fetcher>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof postAuth>>,
-        TError,
-        {data: PostAuthBody},
-        TContext
-      > => {
-
-      const mutationOptions = getPostAuthMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    
+  return useMutation(mutationOptions, queryClient);
+};

@@ -32,7 +32,7 @@ export const checkTransaction =
         .filter(
           // @ts-ignore
           ({ phase }) =>
-            phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(index)
+            phase.isApplyExtrinsic && phase.asApplyExtrinsic.eq(index),
         )
         // @ts-ignore
         .forEach(({ event }) => {

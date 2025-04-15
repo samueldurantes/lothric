@@ -26,7 +26,7 @@ function Login() {
   const { getWallets, isLoading: isLoadingTorus } = useTorus();
   const { authenticateUser, isLoading: isAuthenticating } = useAuth();
   const [wallets, setWallets] = useState<InjectedAccountWithMeta[] | undefined>(
-    undefined
+    undefined,
   );
 
   const isLoading = isLoadingTorus || isAuthenticating;
@@ -141,7 +141,7 @@ function App() {
               });
             }
           },
-        }
+        },
       );
     });
   };

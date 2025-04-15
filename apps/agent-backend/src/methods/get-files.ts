@@ -49,6 +49,6 @@ export const getFiles = async (agent: Agent) => {
           files,
         },
       };
-    }
+    },
   );
 };

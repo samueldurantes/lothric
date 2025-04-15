@@ -20,7 +20,7 @@ const mongooseSchema = new Schema<File>(
     cid: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
-  { timestamps: true, collection: 'File' }
+  { timestamps: true, collection: 'File' },
 );
 
 export const FileModel = model<File>('File', mongooseSchema);

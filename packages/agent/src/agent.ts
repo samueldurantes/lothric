@@ -68,7 +68,7 @@ type AgentOptions = {
 type MethodOptions<
   I extends z.ZodSchema,
   O extends z.ZodSchema,
-  E extends z.ZodSchema | undefined
+  E extends z.ZodSchema | undefined,
 > = {
   /** The HTTP method to use for the method. @default 'post' */
   method?: 'get' | 'post';
@@ -130,7 +130,7 @@ type MethodOptions<
 type MethodCallback<
   I extends z.ZodSchema,
   O extends z.ZodSchema,
-  E extends z.ZodSchema
+  E extends z.ZodSchema,
 > = (
   input: z.infer<I>,
   context: {
@@ -139,7 +139,7 @@ type MethodCallback<
       /** The address of the agent */
       address: string;
     };
-  } & Helpers
+  } & Helpers,
 ) => Promise<{ ok: z.infer<O> } | { err: z.infer<E> }>;
 
 /**
@@ -261,7 +261,7 @@ export class Agent {
 
         const token = createAuthToken(
           { uri: payload.uri, userKey: address },
-          this.options.auth.secret
+          this.options.auth.secret,
         );
 
         await this.options.auth.onAfterAuth?.({ walletAddress: address });
@@ -305,7 +305,7 @@ export class Agent {
   method<I extends z.ZodSchema, O extends z.ZodSchema, E extends z.ZodSchema>(
     name: string,
     options: MethodOptions<I, O, E>,
-    callback: MethodCallback<I, O, E>
+    callback: MethodCallback<I, O, E>,
   ) {
     const httpMethod = options?.method ?? 'post';
 
@@ -439,7 +439,7 @@ export class Agent {
         fetch: this.app.fetch,
         port: this.options.port ?? 3000,
       },
-      (info) => console.log(`Server running on port ${info.port}`)
+      (info) => console.log(`Server running on port ${info.port}`),
     );
   }
 }

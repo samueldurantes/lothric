@@ -63,6 +63,6 @@ export const requestQuotaIncrease = async (agent: Agent) => {
           paymentAddress: context.agent.address,
         },
       };
-    }
+    },
   );
 };

@@ -38,7 +38,7 @@ const mongooseSchema = new Schema<User>(
   {
     collection: 'User',
     timestamps: true,
-  }
+  },
 );
 
 mongooseSchema.pre('save', function (next) {

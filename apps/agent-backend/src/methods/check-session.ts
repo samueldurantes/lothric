@@ -56,6 +56,6 @@ export const checkSession = async (agent: Agent) => {
           },
         },
       };
-    }
+    },
   );
 };

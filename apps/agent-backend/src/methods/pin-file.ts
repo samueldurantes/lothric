@@ -80,7 +80,7 @@ export const pinFile = async (agent: Agent) => {
         },
         {
           $inc: { filesAvailable: -1 },
-        }
+        },
       );
 
       return {
@@ -88,6 +88,6 @@ export const pinFile = async (agent: Agent) => {
           file: fileUploaded,
         },
       };
-    }
+    },
   );
 };

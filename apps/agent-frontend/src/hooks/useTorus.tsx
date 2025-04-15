@@ -18,7 +18,7 @@ function generateNonce(): string {
   const array = new Uint8Array(16);
   crypto.getRandomValues(array);
   return Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join(
-    ''
+    '',
   );
 }
 
@@ -119,7 +119,7 @@ export const useTorus = ({
             ...account,
             freeBalance: 0n,
           };
-        })
+        }),
       );
 
       return accountsWithFreeBalance;
@@ -129,7 +129,7 @@ export const useTorus = ({
   }
 
   async function generateAuthReq(
-    selectedAccount: InjectedAccountWithMeta
+    selectedAccount: InjectedAccountWithMeta,
   ): Promise<{
     payload: `0x${string}`;
     signature: `0x${string}`;
@@ -148,7 +148,7 @@ export const useTorus = ({
     }
 
     const msgHex = stringToHex(
-      JSON.stringify(createAuthReqData('http://localhost:5173'))
+      JSON.stringify(createAuthReqData('http://localhost:5173')),
     );
 
     const result = await injector.signer.signRaw({

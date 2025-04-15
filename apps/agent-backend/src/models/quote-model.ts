@@ -20,7 +20,7 @@ const mongooseSchema = new Schema<Quote>(
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     hash: { type: String },
   },
-  { timestamps: true, collection: 'Quote' }
+  { timestamps: true, collection: 'Quote' },
 );
 
 export const QuoteModel = model<Quote>('Quote', mongooseSchema);
