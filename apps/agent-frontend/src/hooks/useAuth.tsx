@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = useCallback(() => {
     setToken('');
     setUser(null);
-  }, []);
+  }, [setToken, setUser]);
 
   useEffect(() => {
     if (token) {
