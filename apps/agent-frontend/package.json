@@ -1,0 +1,38 @@
+{
+  "name": "@lothric/agent-frontend",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "orval": "API_URL=http://localhost:3000 orval --config ./orval.config.cjs"
+  },
+  "dependencies": {
+    "@polkadot-api/merkleize-metadata": "^1.1.14",
+    "@polkadot/api": "^15.9.1",
+    "@polkadot/extension-dapp": "^0.58.7",
+    "@polkadot/util": "^13.4.3",
+    "@polkadot/util-crypto": "^13.4.3",
+    "@tanstack/react-query": "^5.74.0",
+    "lucide-react": "^0.488.0",
+    "notistack": "^3.0.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "types": "link:@polkadot/extension-inject/types"
+  },
+  "devDependencies": {
+    "@polkadot/extension-inject": "^0.58.7",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.21",
+    "globals": "^15.15.0",
+    "orval": "^7.8.0",
+    "postcss": "^8.5.3",
+    "tailwindcss": "3.4.17",
+    "typescript": "~5.7.2",
+    "vite": "^6.2.0"
+  }
+}
