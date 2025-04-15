@@ -1,9 +1,11 @@
 import { serve } from '@hono/node-server';
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
 import type { Context } from 'hono';
+import { cors } from 'hono/cors';
 import { z } from 'zod';
+import type { ApiPromise } from '@polkadot/api';
 
-import * as helpers from './helpers';
+import { connectToChainRpc, checkTransaction, type Helpers } from './helpers';
 import {
   SignedPayloadSchema,
   createAuthToken,
@@ -11,12 +13,23 @@ import {
   verifyAuthRequest,
   verifySignedData,
   decodeAuthToken,
+  type SS58Address,
 } from './utils';
+
+/**
+ * User type definition
+ */
+type User = {
+  /** The wallet address of the user */
+  walletAddress: SS58Address;
+};
 
 /**
  * Configuration options for the Agent class
  */
 type AgentOptions = {
+  /** The address of the agent */
+  address: string;
   /** Port number for the server to listen on. Defaults to 3000 if not specified */
   port?: number;
   /** Authentication configuration */
@@ -27,6 +40,8 @@ type AgentOptions = {
     secret: string;
     /** The name of the header to check for authentication. @default 'Authorization' */
     headerName?: string;
+    /** The callback to be called after the authentication is successful */
+    onAfterAuth?: (user: User) => Promise<void> | void;
   };
   /** Documentation configuration */
   docs: {
@@ -53,7 +68,7 @@ type AgentOptions = {
 type MethodOptions<
   I extends z.ZodSchema,
   O extends z.ZodSchema,
-  E extends z.ZodSchema | undefined,
+  E extends z.ZodSchema | undefined
 > = {
   /** The HTTP method to use for the method. @default 'post' */
   method?: 'get' | 'post';
@@ -115,14 +130,16 @@ type MethodOptions<
 type MethodCallback<
   I extends z.ZodSchema,
   O extends z.ZodSchema,
-  E extends z.ZodSchema,
+  E extends z.ZodSchema
 > = (
   input: z.infer<I>,
   context: {
-    user?: {
-      walletAddress: string;
+    user?: User;
+    agent: {
+      /** The address of the agent */
+      address: string;
     };
-  } & typeof helpers,
+  } & Helpers
 ) => Promise<{ ok: z.infer<O> } | { err: z.infer<E> }>;
 
 /**
@@ -165,6 +182,7 @@ type MethodCallback<
 export class Agent {
   /** Hono application instance */
   private app: OpenAPIHono = new OpenAPIHono();
+  private api!: ApiPromise;
   /** Agent configuration options */
   private options: AgentOptions;
 
@@ -181,7 +199,11 @@ export class Agent {
    * Initializes the Agent instance
    * @private
    */
-  private init() {
+  private async init() {
+    this.app.use('*', cors());
+
+    this.api = await connectToChainRpc();
+
     this.setupDocs();
     this.setupAuth();
   }
@@ -239,8 +261,10 @@ export class Agent {
 
         const token = createAuthToken(
           { uri: payload.uri, userKey: address },
-          this.options.auth.secret,
+          this.options.auth.secret
         );
+
+        await this.options.auth.onAfterAuth?.({ walletAddress: address });
 
         return c.json({ token, authenticationType: 'Bearer' as const }, 200);
       } catch (error) {
@@ -281,7 +305,7 @@ export class Agent {
   method<I extends z.ZodSchema, O extends z.ZodSchema, E extends z.ZodSchema>(
     name: string,
     options: MethodOptions<I, O, E>,
-    callback: MethodCallback<I, O, E>,
+    callback: MethodCallback<I, O, E>
   ) {
     const httpMethod = options?.method ?? 'post';
 
@@ -380,7 +404,10 @@ export class Agent {
         ...(decodedToken
           ? { user: { walletAddress: decodedToken.userKey } }
           : {}),
-        ...helpers,
+        agent: {
+          address: this.options.address,
+        },
+        checkTransaction: checkTransaction(this.api),
       };
 
       const result = await callback(input, context);
@@ -412,7 +439,7 @@ export class Agent {
         fetch: this.app.fetch,
         port: this.options.port ?? 3000,
       },
-      (info) => console.log(`Server running on port ${info.port}`),
+      (info) => console.log(`Server running on port ${info.port}`)
     );
   }
 }
