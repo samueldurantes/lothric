@@ -1,5 +1,5 @@
-import React from 'react';
 import { Upload } from 'lucide-react';
+import type React from 'react';
 
 interface FileUploadZoneProps {
   isDragging: boolean;

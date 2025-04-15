@@ -1,8 +1,8 @@
-import { Agent, z } from '@lothric/agent';
+import { type Agent, z } from '@lothric/agent';
 
-import { QuotaInfoSchema } from '../types';
-import { UserModel } from '../models/user-model';
 import { FileModel } from '../models/file-model';
+import { UserModel } from '../models/user-model';
+import { QuotaInfoSchema } from '../types';
 
 export const getQuota = async (agent: Agent) => {
   agent.method(

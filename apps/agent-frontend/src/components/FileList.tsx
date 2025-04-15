@@ -1,7 +1,7 @@
-import { File, CheckCircle } from 'lucide-react';
+import { CheckCircle, File } from 'lucide-react';
 
-import { formatFileSize } from '../utils/formatters.ts';
 import type { FileItem } from '../types';
+import { formatFileSize } from '../utils/formatters.ts';
 
 interface FileListProps {
   files: FileItem[];

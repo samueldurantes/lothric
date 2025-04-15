@@ -1,19 +1,19 @@
 import { serve } from '@hono/node-server';
 import { OpenAPIHono, createRoute } from '@hono/zod-openapi';
+import type { ApiPromise } from '@polkadot/api';
 import type { Context } from 'hono';
 import { cors } from 'hono/cors';
 import { z } from 'zod';
-import type { ApiPromise } from '@polkadot/api';
 
-import { connectToChainRpc, checkTransaction, type Helpers } from './helpers';
+import { type Helpers, checkTransaction, connectToChainRpc } from './helpers';
 import {
+  type SS58Address,
   SignedPayloadSchema,
   createAuthToken,
+  decodeAuthToken,
   ensureTrailingSlash,
   verifyAuthRequest,
   verifySignedData,
-  decodeAuthToken,
-  type SS58Address,
 } from './utils';
 
 /**

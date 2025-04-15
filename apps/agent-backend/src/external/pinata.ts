@@ -1,5 +1,5 @@
-import type { CID } from '../types';
 import { config } from '../config';
+import type { CID } from '../types';
 
 type UploadToPinataArgs = {
   file: File;

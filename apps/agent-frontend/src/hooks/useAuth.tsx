@@ -1,18 +1,18 @@
+import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import {
+  type ReactNode,
   createContext,
-  useContext,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useState,
-  ReactNode,
 } from 'react';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import { useGetCheckSession, usePostAuth } from '../schema/default/default';
-import { GetCheckSession200User } from '../schema/model';
-import { useTorus } from './useTorus';
+import type { GetCheckSession200User } from '../schema/model';
 import { useLocalStorage } from './useLocalStorage';
+import { useTorus } from './useTorus';
 
 const AUTH_TOKEN_KEY = 'AGENT_SESSION_TOKEN';
 

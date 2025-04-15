@@ -1,14 +1,15 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Wallet } from 'lucide-react';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useQueryClient } from '@tanstack/react-query';
+import { Wallet } from 'lucide-react';
 import { enqueueSnackbar } from 'notistack';
+import type React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { FileUploadZone } from './components/FileUploadZone';
 import { FileList } from './components/FileList';
-import { useTorus } from './hooks/useTorus';
-import { useAuth } from './hooks/useAuth';
+import { FileUploadZone } from './components/FileUploadZone';
 import { UserBar } from './components/UserBar';
+import { useAuth } from './hooks/useAuth';
+import { useTorus } from './hooks/useTorus';
 import { useGetGetFiles, usePostPinFile } from './schema/default/default';
 
 function IsLoading() {

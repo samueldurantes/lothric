@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
+import { merkleizeMetadata } from '@polkadot-api/merkleize-metadata';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import type {
   InjectedAccountWithMeta,
   InjectedExtension,
 } from '@polkadot/extension-inject/types';
-import { cryptoWaitReady } from '@polkadot/util-crypto';
 import { stringToHex, u8aToHex } from '@polkadot/util';
-import { merkleizeMetadata } from '@polkadot-api/merkleize-metadata';
+import { cryptoWaitReady } from '@polkadot/util-crypto';
+import { useCallback, useEffect, useState } from 'react';
 
 export interface TorusApiState {
   web3Accounts: (() => Promise<InjectedAccountWithMeta[]>) | null;

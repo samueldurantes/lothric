@@ -1,8 +1,8 @@
 import { type Agent, z } from '@lothric/agent';
 
 import { uploadToPinata } from '../external/pinata';
-import { UserModel } from '../models/user-model';
 import { FileModel, FileSchema } from '../models/file-model';
+import { UserModel } from '../models/user-model';
 
 export const pinFile = async (agent: Agent) => {
   agent.method(

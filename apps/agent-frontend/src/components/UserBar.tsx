@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { User, Plus, CreditCard, History, X, LogOut } from 'lucide-react';
+import { CreditCard, History, LogOut, Plus, User, X } from 'lucide-react';
 import { enqueueSnackbar } from 'notistack';
+import { useState } from 'react';
 
-import { GetCheckSession200User } from '../schema/model';
+import { useAuth } from '../hooks/useAuth';
+import { useTorus } from '../hooks/useTorus';
 import {
   usePostConfirmPayment,
   usePostRequestQuotaIncrease,
 } from '../schema/default/default';
-import { useAuth } from '../hooks/useAuth';
-import { useTorus } from '../hooks/useTorus';
+import type { GetCheckSession200User } from '../schema/model';
 
 interface UserBarProps {
   user: GetCheckSession200User | null;

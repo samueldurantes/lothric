@@ -1,14 +1,14 @@
 import { Agent } from '@lothric/agent';
 
-import { pinFile } from './methods/pin-file';
-import { getQuota } from './methods/get-quota';
-import { requestQuotaIncrease } from './methods/request-quota-increase';
-import { UserModel } from './models/user-model';
-import { connectDatabase } from './database';
 import { config } from './config';
+import { connectDatabase } from './database';
 import { checkSession } from './methods/check-session';
 import { confirmPayment } from './methods/confirm-payment';
 import { getFiles } from './methods/get-files';
+import { getQuota } from './methods/get-quota';
+import { pinFile } from './methods/pin-file';
+import { requestQuotaIncrease } from './methods/request-quota-increase';
+import { UserModel } from './models/user-model';
 
 const agent = new Agent({
   address: config.AGENT_ADDRESS,
